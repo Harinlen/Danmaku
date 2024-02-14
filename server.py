@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 import os
+import webbrowser
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, WebSocket
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
+from server_settings import settings as serv_settings
 from modules import paths, config, danmaku, cache, skins, settings, crash_handler
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Load application information.
-    config.load_app_info()
+    if not config.load_app_info():
+        crash_handler.show_error("错误", "找不到BiliBili项目配置文件，请创建app_info.json")
+        return
     # Load the configure file.
     config.load()
     # Restore the cache.
@@ -20,6 +24,8 @@ async def lifespan(app: FastAPI):
     # Start the danmaku fetching background work.
     if 'user_id' in config.APP_CONFIG and len(config.APP_CONFIG['user_id']) > 0:
         await danmaku.start_danmaku_fetcher(config.APP_CONFIG['user_id'])
+    # Show the setting page.
+    webbrowser.open("http://127.0.0.1:{}/settings/".format(serv_settings.PORT))
     # Expand the event loop.
     yield
     # Stop the live room fetching tasks.

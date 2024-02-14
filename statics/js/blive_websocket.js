@@ -1,8 +1,13 @@
+let worker_start = false
+
 onmessage = (event) => {
     let inst = event.data
     let op = inst['op']
     if(op === 'start') {
-        start_websocket(inst['host'])
+        if (!worker_start) {
+            start_websocket(inst['host'])
+            worker_start = true
+        }
     }
 }
 
@@ -23,7 +28,7 @@ function start_websocket(host_addr) {
     ws.onclose = function (e) {
         console.log('Connection closed, retry 1 second later...')
         setTimeout(function () {
-            start_websocket()
+            start_websocket(host_addr)
         }, 1000)
     }
     ws.onerror = function (e) {

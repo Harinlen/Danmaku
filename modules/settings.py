@@ -53,7 +53,6 @@ async def setting_home(request: Request):
     b_user_name = ''
     b_user_id = ''
     b_room_id = ''
-    b_face_url = ''
     if len(config.APP_CONFIG['user_id']) > 0:
         verify_info = await danmaku.get_live_room_info(config.APP_CONFIG['user_id'])
         if verify_info['code'] == 0:
@@ -61,15 +60,13 @@ async def setting_home(request: Request):
             b_user_name = user_info['uname']
             b_user_id = user_info['uid']
             b_room_id = user_info['room_id']
-            b_face_url = base64.b64encode(user_info['uface'].encode('utf-8')).decode('utf-8')
     # Render the room page.
     room_page = templates.render(
         request, 'settings_room.html',
         {'user_id_code': '未设置' if len(config.APP_CONFIG['user_id']) == 0 else config.APP_CONFIG['user_id'],
                  'user_name': b_user_name,
                  'room_id': b_room_id,
-                 'user_id': b_user_id,
-                 'face_url': b_face_url}).body.decode('utf-8')
+                 'user_id': b_user_id}).body.decode('utf-8')
     return render_setting_page(request, select_menu_item(0), room_page)
 
 

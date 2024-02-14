@@ -3,8 +3,7 @@
 </div>
 
 <h2>主播信息</h2>
-<div>当前主播身份码：{{ user_id_code }}<button class="btn btn-dark rounded-pill px-3 ms-3" type="button" onclick="jump_to_user_id_input()">设置主播身份码</button></div>
-<img src="/api/cache/image_proxy?url_encoded={{ face_url }}" style="max-width: 128px"/>
+<div>当前主播身份码：{{ user_id_code }}<button class="btn btn-primary rounded-pill px-3 ms-3" type="button" onclick="jump_to_user_id_input()">设置主播身份码</button></div>
 <div>主播用户名：{{ user_name }}</div>
 <div>直播间ID：<a href="https://live.bilibili.com/{{ room_id }}" target="_blank">{{ room_id }}</a></div>
 <div>主播B站ID：<a href="https://space.bilibili.com/{{ user_id }}" target="_blank">{{ user_id }}</a></div>

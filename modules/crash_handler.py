@@ -26,3 +26,7 @@ def show_crash_report():
     loop = asyncio.get_running_loop()
     loop.stop()
     sys.exit(-1)
+
+
+def show_error(title: str, message: str) -> None:
+    tkinter.messagebox.showerror(title, message)

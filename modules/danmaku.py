@@ -143,6 +143,7 @@ async def start_danmaku_fetcher(user_id: str):
     live_room_info = await get_live_room_info(user_id)
     if live_room_info['code'] != 0:
         # Cannot fetch any information, quit.
+        print('无效的直播身份码 ({})，请重新设置。'.format(user_id))
         return
     # Extract the information from the pack info.
     wss_urls = live_room_info['data']['websocket_info']['wss_link']
@@ -154,6 +155,7 @@ async def start_danmaku_fetcher(user_id: str):
     # Get the reply info of the auth body.
     await ws.recv()
     # Start the fetcher task and heartbeat task.
+    print('身份码 {} 成功连接到直播间...'.format(user_id))
     global DANMAKU_FETCHER, DANMAKU_HEARTBEAT
     DANMAKU_FETCHER = asyncio.ensure_future(danmaku_fetcher(ws))
     DANMAKU_HEARTBEAT = asyncio.ensure_future(danmaku_heartbeat(ws))
@@ -162,6 +164,9 @@ async def start_danmaku_fetcher(user_id: str):
 def stop_danmaku_fetcher():
     global DANMAKU_FETCHER, DANMAKU_HEARTBEAT
     # Cancel the asyncio tasks execution.
+    if not isinstance(DANMAKU_FETCHER, asyncio.Task):
+        return
+    print('正在关闭弹幕机...')
     if isinstance(DANMAKU_FETCHER, asyncio.Task):
         DANMAKU_FETCHER.cancel()
         DANMAKU_FETCHER = None

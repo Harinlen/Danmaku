@@ -1,6 +1,4 @@
 .danmaku-base {
-    font-family: "猫啃珠圆体", sans-serif;
-    width: 100%;
     color: rgba(255, 255, 255, 1.0);
 }
 
@@ -38,10 +36,6 @@
 
 .danmaku-splitter {
     border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-}
-
-.danmu-emoji {
-    width: 2.5em;
 }
 
 .danmaku-gift {

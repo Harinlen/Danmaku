@@ -16,6 +16,7 @@ DANMAKU_RECORD_LAST_MODIFIED = 0
 DANMAKU_RECORD_LAST_SAVED = 0
 
 IMAGE_CACHES = {}
+EMOJI_CACHES = {}
 
 
 def load_history_record():
@@ -41,6 +42,14 @@ def flush_history_record():
         with open(paths.PATH_DANMAKU_CACHE, 'w', encoding='utf-8') as danmu_history_file:
             json.dump(DANMAKU_RECORD, danmu_history_file)
         DANMAKU_RECORD_LAST_SAVED = DANMAKU_RECORD_LAST_MODIFIED
+
+
+def load_emoji_cache():
+    global EMOJI_CACHES
+    # Use the filename as the key of the image.
+    for filename in os.listdir(paths.DIR_EMOJI):
+        emoji_name, _ = os.path.splitext(filename)
+        EMOJI_CACHES['[{}]'.format(emoji_name)] = '/statics/emoji/' + filename
 
 
 router = APIRouter(prefix='/cache')
@@ -110,3 +119,8 @@ async def fetch_single_image(url_encoded: str):
                 return Response(media_type='image/png', content=await response.read())
     except Exception:
         return Response(media_type='image/png', content=EMPTY_PNG)
+
+
+@router.get('/emoji_map')
+async def fetch_emoji_map():
+    return EMOJI_CACHES

@@ -19,6 +19,7 @@ async def lifespan(app: FastAPI):
     config.load()
     # Restore the cache.
     cache.load_history_record()
+    cache.load_emoji_cache()
     # Update the skin list.
     skins.update_installed_skins()
     # Start the danmaku fetching background work.

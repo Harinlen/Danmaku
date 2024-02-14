@@ -8,6 +8,11 @@ onmessage = (event) => {
 
 let image_cache_request = new XMLHttpRequest()
 
+// Load the emoji info.
+image_cache_request.open('GET', '/api/cache/emoji_map', false)
+image_cache_request.send()
+let emoji_map = JSON.parse(image_cache_request.responseText)
+
 function create_danmaku(danmu_data) {
     let guard = danmu_data["guard_level"]
     let user_name = danmu_data["uname"]
@@ -24,7 +29,11 @@ function create_danmaku(danmu_data) {
             content = '<img class="danmu-emoji" src="'+local_url+'" alt="'+content+'"/>'
         }
     }
-    //Generate the item object.
+    // Replace the emoji into image.
+    for (const [emoji_str, emoji_url] of Object.entries(emoji_map)) {
+        content = content.replaceAll(emoji_str, '<img class="danmaku-inline-emoji" src="'+emoji_url+'">')
+    }
+    // Generate the item object.
     return {'type': 'danmaku',
         'params': [guard, user_name, content]}
 }
@@ -67,6 +76,8 @@ function to_render_item(item) {
         return create_super_chat(item['data'])
     } else if(packet_cmd === 'LIVE_OPEN_PLATFORM_GUARD') {
         return create_guard(item['data'])
+    } else {
+        return null
     }
 }
 
@@ -77,7 +88,10 @@ fetch_history_request.send()
 let history_record = JSON.parse(fetch_history_request.responseText)
 
 history_record.forEach(function (item) {
-    postMessage({'op': 'add_history', 'item': to_render_item(item)})
+    let rendered_item = to_render_item(item)
+    if(rendered_item !== null) {
+        postMessage({'op': 'add_history', 'item': rendered_item})
+    }
 })
 
 postMessage({'op': 'start_websocket'})

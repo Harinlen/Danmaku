@@ -35,6 +35,24 @@ body {
     transform: none;
 }
 
+.danmaku * {
+    display: inline-block;
+    vertical-align: bottom;
+}
+
 .danmaku-enter.outside {
     transform: translateY(100%);
+}
+
+.danmu-emoji {
+    height: 2.5em;
+}
+
+.danmaku-inline-emoji {
+    height: 1.5em;
+}
+
+.danmaku-base {
+    font-family: "猫啃珠圆体", sans-serif;
+    width: 100%;
 }

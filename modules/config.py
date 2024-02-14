@@ -36,6 +36,8 @@ def load():
     # Some must have values needs to be set here.
     if 'record_size' not in APP_CONFIG or not isinstance(APP_CONFIG['record_size'], int):
         APP_CONFIG['record_size'] = 10
+    if 'user_id' not in APP_CONFIG:
+        APP_CONFIG['user_id'] = ''
 
 
 def save():

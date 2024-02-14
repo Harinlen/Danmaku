@@ -66,5 +66,5 @@ async def favicon():
 
 
 @serv.exception_handler(Exception)
-async def exception_handler():
+async def exception_handler(request, exc):
     crash_handler.show_crash_report()

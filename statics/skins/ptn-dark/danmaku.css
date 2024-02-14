@@ -1,0 +1,66 @@
+.danmaku-base {
+    font-family: "猫啃珠圆体", sans-serif;
+    width: 100%;
+    color: rgba(255, 255, 255, 1.0);
+}
+
+.danmaku-base > a, .danmaku-base > a:visited {
+    color: rgba(255, 255, 255, 1.0);
+}
+
+.guard-0 {
+    color: rgba(158, 167, 174, 1.0);
+}
+
+.guard-1 {
+    color: rgba(209, 147, 224, 1.0);
+}
+
+.guard-2 {
+    color: rgba(209, 147, 224, 1.0);
+}
+
+.guard-3 {
+    color: rgba(76, 241, 234);
+}
+
+.danmaku {
+    display: table-cell;
+    color: rgba(255, 255, 255, 1.0);
+    padding-top: 22px;
+    padding-bottom: 9px;
+}
+
+.danmaku * {
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.danmaku-splitter {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.danmu-emoji {
+    width: 2.5em;
+}
+
+.danmaku-gift {
+}
+
+.danmaku-guard {
+    color: rgba(0, 0, 0, 1.0);
+}
+
+.guard-face {
+    mask-image: linear-gradient(to right,
+                    rgba(var(--sc-background), 0) 0,
+                    rgba(var(--sc-background), .6) 15%,
+                    rgba(var(--sc-background), 1) 50%,
+                    rgba(var(--sc-background), 1) 75%,
+                    rgba(var(--sc-background), .6) 85%,
+                    rgba(var(--sc-background), 0) 100%);
+}
+
+.gift-text {
+    color: rgba(255, 255, 255, 1.0)
+}

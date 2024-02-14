@@ -1,0 +1,11 @@
+__pycache__
+.idea
+app_info.json
+config.json
+cache
+runtime
+py3k
+build
+*.exe
+*.obj
+*.res

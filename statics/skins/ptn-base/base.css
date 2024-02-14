@@ -1,0 +1,40 @@
+@font-face {
+    font-family: "猫啃珠圆体";
+    src: url("/statics/fonts/MaokenZhuyuanTi.ttf");
+}
+
+body {
+    margin: 0;
+    font-size: var(--font-size);
+}
+
+#danmaku-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+#danmaku-history {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#danmaku-history.anime {
+    transition: all calc(var(--transition-duration));
+}
+
+.danmaku-enter {
+    position: absolute;
+    bottom: 0;
+    transition: all calc(var(--transition-duration));
+    transform: none;
+}
+
+.danmaku-enter.outside {
+    transform: translateY(100%);
+}

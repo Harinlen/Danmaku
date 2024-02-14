@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Saki Tojo">
+    <title>哔哩哔哩直播身份码 · MADS</title>
+    <style>
+        button:focus {
+            outline: none;
+        }
+
+        input[type=text] {
+            outline: none;
+        }
+    </style>
+</head>
+<body style="background: rgb(239, 239, 239);">
+    <div style="position:absolute;top:0;left:0;bottom:0;right:0;width:403px;height: 253px;margin:auto;opacity: 1;background: #FFFFFF;border-radius: 5.5px;border: 1px solid #D3D7DE;overflow: hidden;">
+        <div style="position: absolute;left: -21px;top: 1px;width: 423.39px;height: 301.94px;opacity: 1;">
+            <div style="position: absolute;left: 0px;top: 145.29px;width: 37.91%;height: 51.88%;opacity: 0.7;">
+                <img src="/statics/asserts/auth/bilibili_icon.svg" width="160.51px" height="156.65px" />
+            </div>
+        </div>
+        <img src="/statics/asserts/auth/auth_title.svg" style="position:absolute;margin:auto;top:23px;left:0;right:0;" />
+        <button onclick="window.location.href='{{ close_url }}'" style="position:absolute;right:10px;top:15px;appearance: none;border:none;background:none;cursor:pointer;">
+            <img src="/statics/asserts/auth/auth_close.svg" />
+        </button>
+        <div style="position:absolute;margin:auto;left:0;right:0;top: 73px;width: 310px;height: 53px;">
+            <div style="width:310px;height:33px;border:1px solid #E3E5E7;border-radius: 3.5px;">
+                <div style="position:absolute;width:66px;height:33px;background: #F6F7F8;">
+                    <img style="position:absolute;left:10.59px;top:10px;" src="/statics/asserts/auth/auth_id_name.svg" />
+                </div>
+                <input id="blive-id" style="position:absolute;top:1px;left:66px;border:none;width:212px;height:31px;margin-left:5.95px;" type="text" placeholder="请输入身份码"/>
+                <button onclick="document.getElementById('blive-id').value='';document.getElementById('blive-id').focus();" style="position:absolute;top:10.5px;left:286.5px;appearance: none;border:none;background:none;cursor:pointer;">
+                    <img src="/statics/asserts/auth/auth_clear.svg" />
+                </button>
+                <img style="position:absolute;top:38px;" src="/statics/asserts/auth/auth_question.svg" />
+                <img style="position:absolute;left:21px;top:36px;" src="/statics/asserts/auth/auth_text_hint.svg" />
+                <button onclick="window.open('https://link.bilibili.com/p/center/index/my-room/start-live#/my-room/start-live');" style="position:absolute;top:38px;right:-6px;appearance: none;border:none;background:none;cursor:pointer;">
+                    <img src="/statics/asserts/auth/auth_get_code.svg" />
+                </button>
+            </div>
+        </div>
+        <button onclick="submit_user_id()" style="position:absolute;width:119px;height:32px;border-radius:4px;background:#FF6699;border:none;top:175px;margin:auto;left:0;right:0;cursor:pointer;">
+            <img style="position: absolute;margin: auto;left: 0;right: 0;top: 0;bottom: 0;" src="/statics/asserts/auth/auth_start.svg" />
+        </button>
+        <button onclick="on_save_click()" style="position: absolute;top: 215px;margin: auto;left: 0;right: 0;width: 78px;height: 14px;border:none;background:none;cursor:pointer;">
+            <img id="save-image" src="/statics/asserts/auth/auth_save_unchecked.svg" style="position: absolute;left: 0;top: 0;"/>
+            <img src="/statics/asserts/auth/auth_save_hint.svg" style="position: absolute; left: 19px;top: 1px;" />
+        </button>
+
+        <script>
+            let save_icon = document.getElementById('save-image');
+            let is_save = window.localStorage.getItem('save_live_code') === 'true';
+
+            function update_button_icon() {
+                save_icon.src = is_save ? '/statics/asserts/auth/auth_save_checked.svg' : '/statics/asserts/auth/auth_save_unchecked.svg';
+            }
+
+            function on_save_click() {
+                is_save = !is_save;
+                update_button_icon();
+                window.localStorage.setItem('save_live_code', is_save);
+            }
+
+            update_button_icon();
+
+            function submit_user_id() {
+                let user_id_input = document.getElementById('blive-id')
+                let user_id = user_id_input.value
+                if(user_id.length === 0) {
+                    user_id_input.focus()
+                    return
+                }
+                fetch('/settings/set_user_id', {
+                     method: "POST",
+                     body: JSON.stringify({'user_id': user_id, 'save': is_save})
+                }).then(response => response.json())
+                    .then(function (response) {
+                        if(response['status'] === 'success') {
+                            window.location.href='{{ close_url }}'
+                        } else {
+                            user_id_input.value = ''
+                            user_id_input.focus()
+                        }
+                    })
+            }
+        </script>
+    </div>
+</body>
+</html>

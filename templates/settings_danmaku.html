@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">弹幕机当前设置</h1>
+</div>
+<div>当前皮肤：{{ current_skin_name }}</div>
+<div>已安装皮肤</div>
+<style>
+    .skin-table {
+        display: table;
+        border-spacing: 10px;
+        border-collapse: separate;
+    }
+
+    .skin-table-row {
+        display: table-row;
+    }
+
+    .skin-table-cell {
+        display: table-cell;
+    }
+</style>
+<div class="skin-table">
+    {% for skin in installed_skins %}
+    <div class="skin-table-row">
+        <div class="skin-table-cell">
+            {{ skin['display'] }}
+        </div>
+        <div class="skin-table-cell">
+            {% if skin['using'] == True %}
+                <button class="btn btn-dark rounded-pill px-3 disabled" type="button">已使用</button>
+            {% else %}
+                <button class="btn btn-dark rounded-pill px-3" type="button" onclick="set_skin('{{ skin["name"] }}')">使用</button>
+            {% endif %}
+        </div>
+        <div class="skin-table-cell">
+            <button class="btn btn-dark rounded-pill px-3" type="button" onclick="window.location.href = '/settings/skin-config/{{ skin["name"] }}'">设置</button>
+        </div>
+    </div>
+    {% endfor %}
+    <script>
+        function set_skin(skin_name) {
+            fetch('/settings/set-skin?name=' + skin_name, {
+                'method': 'GET'
+            }).then(response => response.json())
+                .then(function(response) {
+                    // We don't actually care about response, just refresh the page.
+                    window.location.reload()
+                })
+        }
+    </script>
+</div>

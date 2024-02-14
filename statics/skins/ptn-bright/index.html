@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Saki Tojo">
+    <title>直播间弹幕机 · MADS</title>
+    <link href="/statics/skins/ptn-base/params.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="/statics/skins/ptn-base/base.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="/statics/skins/ptn-bright/danmaku.css" rel="stylesheet" crossorigin="anonymous">
+</head>
+<body>
+<div id="danmaku-container">
+    <div id="danmaku-history"></div>
+</div>
+<script type="text/javascript" src="/statics/skins/ptn-base/ui.js"></script>
+<script>
+    let danmaku_worker = new Worker('/statics/skins/ptn-base/danmaku.js')
+    danmaku_worker.onmessage = function (event) {
+        let inst = event.data
+        let op = inst['op']
+        if (op === 'add_history') {
+            add_history(inst['item'])
+        } else if (op === 'add_to_queue') {
+            add_to_queue(inst['item'])
+        } else if (op === 'start_websocket') {
+            start_websocket()
+        }
+    }
+    let websocket_worker = new Worker('/statics/js/blive_websocket.js')
+    websocket_worker.onmessage = function (event) {
+        let inst = event.data
+        let op = inst['op']
+        if(op === 'refresh') {
+            //Force a hard reload to clear the cache if supported by the browser
+            window.location.reload(true)
+        }
+        if(op === 'new_item') {
+            danmaku_worker.postMessage({'op': 'add_to_queue', 'item': inst['item']})
+        }
+    }
+    function start_websocket() {
+        websocket_worker.postMessage({'op': 'start', 'host': window.location.host})
+    }
+</script>
+</body>
+</html>

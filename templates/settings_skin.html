@@ -1,0 +1,23 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">皮肤设置：{{ skin_display }}</h1>
+  {% if using == True %}
+  <button type="button" class="btn btn-dark rounded-pill px-3 disabled">
+    正在使用
+  {% else %}
+  <button type="button" class="btn btn-dark rounded-pill px-3" onclick="use_current_skin('{{ skin_name }}')">
+    使用该皮肤
+  {% endif %}
+  </button>
+  <script>
+    function use_current_skin(skin_name) {
+      fetch('/settings/set-skin?name=' + skin_name, {
+        'method': 'GET'
+      }).then(response => response.json())
+              .then(function(response) {
+                // We don't actually care about response, just refresh the page.
+                window.location.reload()
+              })
+    }
+  </script>
+</div>
+{{ config_code|safe }}

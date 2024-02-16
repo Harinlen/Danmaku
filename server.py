@@ -49,8 +49,11 @@ with open(os.path.join(paths.DIR_ROOT, 'favicon.png'), 'rb') as favicon_file:
 
 
 @serv.get('/', response_class=HTMLResponse)
-async def get_danmuki_instance():
+async def get_danmuki_instance(skin_name: str = ''):
     # Load the current skin homepage.
+    if len(skin_name) > 0:
+        # Check whether skin exist.
+        return skins.load_skin_homepage(skin_name)
     return skins.load_skin_homepage(skins.get_current_skin())
 
 

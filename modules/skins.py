@@ -34,6 +34,7 @@ def get_skin_info(skin_name: str) -> dict:
             'url': skin_entry,
             'path': skin_root,
             'display': skin_name,
+            'settings': os.path.join(skin_root, 'settings.html'),
             'using': False
         }
         # Load the skin information.
@@ -44,6 +45,10 @@ def get_skin_info(skin_name: str) -> dict:
                     skin_info = json.load(skin_info_file)
                     if 'name' in skin_info:
                         skin_states['display'] = skin_info['name']
+                    if 'settings' in skin_info:
+                        setting_path = os.path.join(paths.DIR_SKINS, *os.path.split(skin_info['settings']))
+                        if os.path.isfile(setting_path):
+                            skin_states['settings'] = setting_path
             except Exception:
                 pass
         return skin_states

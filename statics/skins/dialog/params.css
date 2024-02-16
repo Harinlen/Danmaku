@@ -1,0 +1,10 @@
+* {
+    --transition-duration: 0.1s;
+    --font-size: 16px;
+    --sc-background: 245, 249, 253;
+    --border-color: 255, 0, 0;
+
+    --b: 3px;
+    --c: rgb(var(--border-color));
+    --w: 5px;
+}

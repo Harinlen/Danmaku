@@ -3,7 +3,7 @@ import base64
 import json
 import os
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from modules import config, danmaku, templates, skins, paths
 
 router = APIRouter()
@@ -156,11 +156,13 @@ async def setting_set_skin(name: str):
 async def setting_skin_tweak(request: Request, skin_name: str):
     # Load the skin info.
     skin_info = skins.get_skin_info(skin_name)
+    if len(skin_info) == 0:
+        # Invalid skin request.
+        return RedirectResponse('/settings/')
     # Check whether there is any setting page existed.
-    setting_path = os.path.join(skin_info['path'], 'settings.html')
-    if os.path.isfile(setting_path):
-        with open(setting_path, 'r', encoding='utf-8') as setting_file:
-            config_code = setting_file.read().encode('utf-8')
+    if os.path.isfile(skin_info['settings']):
+        with open(skin_info['settings'], 'r', encoding='utf-8') as setting_file:
+            config_code = setting_file.read()
     else:
         config_code = templates.render(request, 'settings_skin_empty.html').body.decode('utf-8')
     # Render the skin setting page.
@@ -171,3 +173,25 @@ async def setting_skin_tweak(request: Request, skin_name: str):
             'config_code': config_code
         })
     return render_setting_page(request, SETTINGS_MENU_ITEM, skin_setting_page.body.decode('utf-8'), skin_name)
+
+
+@router.post('/skin-update-file')
+async def setting_skin_update_file(request: Request):
+    file_update_request = await request.json()
+    # Check whether the file path and body exist.
+    if ('path' not in file_update_request or
+            'body' not in file_update_request or
+            not isinstance(file_update_request['body'], str)):
+        return {'status': 'failed'}
+    request_path = file_update_request['path']
+    local_path = os.path.join(paths.DIR_SKINS, *os.path.split(request_path))
+    # Only can update the file if it existed before.
+    if not os.path.isfile(local_path):
+        return {'status': 'failed'}
+    # Update the file.
+    with open(local_path, 'w', encoding='utf-8') as local_file:
+        local_file.write(file_update_request['body'])
+    # Ask all the client to refresh.
+    await danmaku.manager.broadcast(CLIENT_REFRESH_PACKET)
+    # File update complete.
+    return {'status': 'success'}

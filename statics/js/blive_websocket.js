@@ -22,6 +22,8 @@ function start_websocket(host_addr) {
                 return
             }
         }
+        // Filter the packet information based on rules.
+
         // Bypass the packet to UI.
         postMessage({'op': 'new_item', 'item': packet})
     }

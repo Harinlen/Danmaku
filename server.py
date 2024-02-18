@@ -6,7 +6,7 @@ from fastapi import FastAPI, WebSocket
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 from server_settings import settings as serv_settings
-from modules import paths, config, danmaku, cache, skins, settings, crash_handler
+from modules import paths, config, danmaku, cache, skins, settings, crash_handler, fonts
 
 
 @asynccontextmanager
@@ -15,9 +15,14 @@ async def lifespan(app: FastAPI):
     if not config.load_app_info():
         crash_handler.show_error("错误", "找不到BiliBili项目配置文件，请创建app_info.json")
         return
+    # Load the font from system.
+    print('正在加载字体...')
+    fonts.load_fonts()
     # Load the configure file.
+    print('正在加载配置...')
     config.load()
     # Restore the cache.
+    print('正在加载缓存...')
     cache.load_history_record()
     cache.load_emoji_cache()
     # Update the skin list.

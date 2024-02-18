@@ -1,13 +1,49 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">缓存管理</h1>
 </div>
-<button class="btn btn-primary rounded-pill px-3" type="button" onclick="clear_danmaku()">清空已有弹幕</button>
+<div>
+    <button class="btn btn-primary rounded-pill px-3" type="button" onclick="clear_danmaku()">清空已有弹幕</button><span id="clear_cache_hint" class="ms-3"></span>
+</div>
 <script>
+    let clear_hint_text = document.getElementById('clear_cache_hint')
     function clear_danmaku(){
-        fetch('/settings/clear-cache')
+        fetch('/settings/clear-cache', {
+            method: 'GET'
+        }).then(response => response.json())
+            .then(function (response) {
+                clear_hint_text.innerText = '历史弹幕已清空'
+                setTimeout(function () {
+                    clear_hint_text.innerText = ''
+                }, 3000)
+            })
     }
 </script>
-
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">弹幕消息过滤</h1>
+</div>
+<div>
+    <div class="mb-3 form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="filterShowDanmaku" checked="">
+        <label class="form-check-label" for="filterShowDanmaku">显示消息弹幕</label>
+    </div>
+    <div class="mb-3 form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="filterShowGuard" checked="">
+        <label class="form-check-label" for="filterShowGuard">显示上舰消息</label>
+    </div>
+    <div class="mb-3 form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="filterShowSC" checked="">
+        <label class="form-check-label" for="filterShowSC">显示醒目留言（SC）</label>
+    </div>
+    <div class="mb-3 form-check form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="filterGiftMinimum" checked="">
+        <label class="form-check-label" for="filterGiftMinimum">显示不低于价格礼物消息</label>
+    </div>
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="0" aria-label="0" aria-describedby="price_unit">
+        <span class="input-group-text" id="price_unit">元</span>
+    </div>
+    <button type="button" class="btn btn-primary">应用设置</button>
+</div>
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">皮肤设置</h1>
 </div>

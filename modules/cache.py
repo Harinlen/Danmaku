@@ -44,6 +44,13 @@ def flush_history_record():
         DANMAKU_RECORD_LAST_SAVED = DANMAKU_RECORD_LAST_MODIFIED
 
 
+def clear_history_record():
+    global DANMAKU_RECORD, DANMAKU_RECORD_LAST_MODIFIED
+    DANMAKU_RECORD = []
+    DANMAKU_RECORD_LAST_MODIFIED = time.time()
+    flush_history_record()
+
+
 def load_emoji_cache():
     global EMOJI_CACHES
     # Use the filename as the key of the image.

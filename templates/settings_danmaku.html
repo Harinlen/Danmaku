@@ -1,4 +1,14 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">缓存管理</h1>
+</div>
+<button class="btn btn-primary rounded-pill px-3" type="button" onclick="clear_danmaku()">清空已有弹幕</button>
+<script>
+    function clear_danmaku(){
+        fetch('/settings/clear-cache')
+    }
+</script>
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">皮肤设置</h1>
 </div>
 <div>当前皮肤：{{ current_skin_name }}</div>

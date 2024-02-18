@@ -4,7 +4,7 @@ import json
 import os
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
-from modules import config, danmaku, templates, skins, paths
+from modules import config, danmaku, templates, skins, paths, cache
 
 router = APIRouter()
 
@@ -138,6 +138,18 @@ async def setting_danmaku(request: Request):
 
 
 CLIENT_REFRESH_PACKET = json.dumps({'cmd': 'MTC_REFRESH'})
+
+
+@router.get('/clear-cache')
+async def setting_clear_cache():
+    try:
+        # Clear the history records.
+        cache.clear_history_record()
+        # Ask all the client to refresh.
+        await danmaku.manager.broadcast(CLIENT_REFRESH_PACKET)
+        return {'status': 'success'}
+    except Exception:
+        return {'status': 'failed'}
 
 
 @router.get('/set-skin')

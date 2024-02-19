@@ -9,3 +9,5 @@ build
 *.exe
 *.obj
 *.res
+/statics/css/fonts.css
+/statics/css/sys_fonts.css

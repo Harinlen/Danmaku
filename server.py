@@ -26,16 +26,25 @@ async def lifespan(app: FastAPI):
     cache.load_history_record()
     cache.load_emoji_cache()
     # Update the skin list.
+    print('正在加载皮肤...')
     skins.update_installed_skins()
     # Start the danmaku fetching background work.
+    print('正在登录...')
     if 'user_id' in config.APP_CONFIG and len(config.APP_CONFIG['user_id']) > 0:
         await danmaku.start_danmaku_fetcher(config.APP_CONFIG['user_id'])
     # Show the setting page.
     webbrowser.open("http://127.0.0.1:{}/settings/".format(serv_settings.PORT))
     # Expand the event loop.
+    print('正在启动服务器...')
     yield
     # Stop the live room fetching tasks.
     danmaku.stop_danmaku_fetcher()
+    # Flush the cache.
+    print('正在保存缓存...')
+    cache.flush_history_record()
+    print('正在保存配置...')
+    config.save()
+    print('正在关闭系统...')
 
 
 serv = FastAPI(lifespan=lifespan)
